@@ -10,12 +10,14 @@ export function useSyncFiltersWithUrl() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
-  
-  const { category, brands, minPrice, maxPrice, searchQuery, setAllFilters } = useFilterStore();
-  const isInitialRender = useRef(true);
 
-  // 1. Al cargar la página: Leer los parámetros de la URL e inyectarlos en Zustand
+  const { category, brands, minPrice, maxPrice, searchQuery, setAllFilters } = useFilterStore();
+  const isUpdatingFromUrl = useRef(false);
+
+  // 1. Carga inicial desde la URL a Zustand (solo se ejecuta una vez al montar o al navegar manualmente)
   useEffect(() => {
+    isUpdatingFromUrl.current = true;
+
     const urlCategory = searchParams.get('category') as Category | null;
     const urlBrands = searchParams.get('brands')?.split(',').filter(Boolean) || [];
     const urlMinPrice = searchParams.get('minPrice') ? Number(searchParams.get('minPrice')) : null;
@@ -29,14 +31,16 @@ export function useSyncFiltersWithUrl() {
       maxPrice: urlMaxPrice,
       searchQuery: urlSearchQuery,
     });
+
+    // Permitimos que el siguiente render actualice la URL si el usuario cambia un filtro
+    setTimeout(() => {
+      isUpdatingFromUrl.current = false;
+    }, 0);
   }, [searchParams, setAllFilters]);
 
-  // 2. Al cambiar el estado de Zustand: Actualizar la URL sin recargar la página
+  // 2. Sincronizar cambios del Store de Zustand hacia la URL
   useEffect(() => {
-    if (isInitialRender.current) {
-      isInitialRender.current = false;
-      return;
-    }
+    if (isUpdatingFromUrl.current) return;
 
     const params = new URLSearchParams();
 
