@@ -30,7 +30,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
       </Link>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Galería / Imagen Principal */}
+        {/* Imagen Principal */}
         <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-gray-100 border border-gray-200 dark:bg-gray-800 dark:border-gray-800">
           <Image
             src={product.imageUrl}

@@ -39,7 +39,7 @@ export function PriceHistoryChart({ data }: PriceHistoryChartProps) {
           <XAxis dataKey="formattedDate" stroke="#888888" fontSize={12} />
           <YAxis stroke="#888888" fontSize={12} tickFormatter={(val) => `$${val / 1000}k`} />
           <Tooltip
-            formatter={(value: number) => [formatCLP(value), 'Precio']}
+            formatter={(value) => [formatCLP(Number(value ?? 0)), 'Precio']}
             labelFormatter={(label) => `Fecha: ${label}`}
             contentStyle={{ backgroundColor: '#1f2937', borderColor: '#374151', color: '#fff' }}
           />
