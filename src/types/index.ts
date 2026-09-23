@@ -40,3 +40,10 @@ export interface FilterState {
   maxPrice: number | null;
   searchQuery: string;
 }
+
+export interface SavedSearch {
+  id: string;
+  name: string;
+  createdAt: string;
+  filters: FilterState;
+}
