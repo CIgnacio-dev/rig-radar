@@ -2,7 +2,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { MOCK_PRODUCTS } from '@/services/mockData';
+import { productRepository } from '@/services/productRepository';
 import { PriceHistoryChart } from '@/components/features/PriceHistoryChart';
 
 interface ProductPageProps {
@@ -11,7 +11,9 @@ interface ProductPageProps {
 
 export default async function ProductPage({ params }: ProductPageProps) {
   const { id } = await params;
-  const product = MOCK_PRODUCTS.find((p) => p.id === id);
+  
+  // Consumo asíncrono desacoplado mediante el Repository Pattern
+  const product = await productRepository.getProductById(id);
 
   if (!product) {
     notFound();
