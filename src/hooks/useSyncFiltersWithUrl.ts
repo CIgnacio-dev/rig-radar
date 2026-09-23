@@ -4,17 +4,17 @@
 import { useEffect, useRef } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { useFilterStore } from '@/store/useFilterStore';
-import { Category } from '@/types';
+import { Category, SortOption } from '@/types';
 
 export function useSyncFiltersWithUrl() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
 
-  const { category, brands, minPrice, maxPrice, searchQuery, setAllFilters } = useFilterStore();
+  const { category, brands, minPrice, maxPrice, searchQuery, sortBy, setAllFilters } = useFilterStore();
   const isUpdatingFromUrl = useRef(false);
 
-  // 1. Carga inicial desde la URL a Zustand (solo se ejecuta una vez al montar o al navegar manualmente)
+  // 1. Carga inicial desde la URL a Zustand
   useEffect(() => {
     isUpdatingFromUrl.current = true;
 
@@ -23,6 +23,7 @@ export function useSyncFiltersWithUrl() {
     const urlMinPrice = searchParams.get('minPrice') ? Number(searchParams.get('minPrice')) : null;
     const urlMaxPrice = searchParams.get('maxPrice') ? Number(searchParams.get('maxPrice')) : null;
     const urlSearchQuery = searchParams.get('q') || '';
+    const urlSortBy = (searchParams.get('sort') as SortOption) || 'price-asc';
 
     setAllFilters({
       category: urlCategory,
@@ -30,15 +31,15 @@ export function useSyncFiltersWithUrl() {
       minPrice: urlMinPrice,
       maxPrice: urlMaxPrice,
       searchQuery: urlSearchQuery,
+      sortBy: urlSortBy,
     });
 
-    // Permitimos que el siguiente render actualice la URL si el usuario cambia un filtro
     setTimeout(() => {
       isUpdatingFromUrl.current = false;
     }, 0);
   }, [searchParams, setAllFilters]);
 
-  // 2. Sincronizar cambios del Store de Zustand hacia la URL
+  // 2. Sincronizar cambios de Zustand hacia la URL
   useEffect(() => {
     if (isUpdatingFromUrl.current) return;
 
@@ -49,10 +50,11 @@ export function useSyncFiltersWithUrl() {
     if (minPrice !== null) params.set('minPrice', minPrice.toString());
     if (maxPrice !== null) params.set('maxPrice', maxPrice.toString());
     if (searchQuery) params.set('q', searchQuery);
+    if (sortBy && sortBy !== 'price-asc') params.set('sort', sortBy);
 
     const queryString = params.toString();
     const newUrl = queryString ? `${pathname}?${queryString}` : pathname;
 
     router.replace(newUrl, { scroll: false });
-  }, [category, brands, minPrice, maxPrice, searchQuery, pathname, router]);
+  }, [category, brands, minPrice, maxPrice, searchQuery, sortBy, pathname, router]);
 }

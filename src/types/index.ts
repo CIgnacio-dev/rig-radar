@@ -2,6 +2,8 @@
 
 export type Category = 'GPU' | 'CPU' | 'RAM' | 'MOTHERBOARD' | 'STORAGE';
 
+export type SortOption = 'price-asc' | 'price-desc' | 'name-asc' | 'name-desc';
+
 export interface Store {
   id: string;
   name: string;
@@ -10,7 +12,7 @@ export interface Store {
 }
 
 export interface PriceRecord {
-  date: string; // Formato "YYYY-MM-DD"
+  date: string;
   price: number;
   storeId: string;
 }
@@ -39,6 +41,7 @@ export interface FilterState {
   minPrice: number | null;
   maxPrice: number | null;
   searchQuery: string;
+  sortBy: SortOption;
 }
 
 export interface SavedSearch {

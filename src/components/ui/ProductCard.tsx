@@ -28,7 +28,7 @@ export function ProductCard({ product }: ProductCardProps) {
   }).format(product.currentLowestPrice);
 
   return (
-    <article className="group relative flex flex-col justify-between overflow-hidden rounded-xl border border-gray-200 bg-white p-4 transition-all hover:shadow-lg dark:border-gray-800 dark:bg-gray-900">
+    <article className="group relative flex flex-col justify-between overflow-hidden rounded-xl border border-slate-800 bg-slate-900/80 p-4 backdrop-blur-sm transition-all hover:border-slate-700 hover:shadow-xl hover:shadow-blue-500/5">
       <div>
         {/* Header con Badge y Botón de Favorito */}
         <div className="mb-3 flex items-center justify-between">
