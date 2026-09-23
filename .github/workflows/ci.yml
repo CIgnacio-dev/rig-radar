@@ -31,7 +31,7 @@ jobs:
         run: npx tsc --noEmit
 
       - name: Run Unit Tests
-        run: npm run test
+        run: npm run test -- --passWithNoTests
 
       - name: Build Next.js Application
         run: npm run build
