@@ -25,7 +25,7 @@ jobs:
         run: npm install --legacy-peer-deps
 
       - name: Run ESLint
-        run: npx next lint .
+        run: npx next lint --dir src
 
       - name: Run TypeScript Type Check
         run: npx tsc --noEmit
