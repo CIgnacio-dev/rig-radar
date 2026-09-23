@@ -1,25 +1,21 @@
 // src/components/ui/ProductCard.tsx
 'use client';
 
-import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Product } from '@/types';
 import { useFavoritesStore } from '@/store/useFavoritesStore';
+import { useIsHydrated } from '@/hooks/useIsHydrated';
 
 interface ProductCardProps {
   product: Product;
 }
 
 export function ProductCard({ product }: ProductCardProps) {
-  const [mounted, setMounted] = useState(false);
+  const isHydrated = useIsHydrated();
   const { toggleFavoriteProduct, isProductFavorite } = useFavoritesStore();
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const isFavorite = mounted ? isProductFavorite(product.id) : false;
+  const isFavorite = isHydrated ? isProductFavorite(product.id) : false;
 
   const formattedPrice = new Intl.NumberFormat('es-CL', {
     style: 'currency',
@@ -32,7 +28,7 @@ export function ProductCard({ product }: ProductCardProps) {
       <div>
         {/* Header con Badge y Botón de Favorito */}
         <div className="mb-3 flex items-center justify-between">
-          <span className="rounded-full bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-600 dark:bg-blue-950 dark:text-blue-400">
+          <span className="rounded-full bg-blue-950 px-2.5 py-1 text-xs font-semibold text-blue-400 border border-blue-800/50">
             {product.category}
           </span>
           <button
@@ -41,7 +37,7 @@ export function ProductCard({ product }: ProductCardProps) {
               toggleFavoriteProduct(product.id);
             }}
             aria-label="Guardar en favoritos"
-            className="z-10 rounded-full p-1.5 text-gray-400 hover:bg-gray-100 hover:text-red-500 dark:hover:bg-gray-800"
+            className="z-10 rounded-full p-1.5 text-slate-400 hover:bg-slate-800 hover:text-red-400 transition-colors"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -49,7 +45,7 @@ export function ProductCard({ product }: ProductCardProps) {
               fill={isFavorite ? 'currentColor' : 'none'}
               stroke="currentColor"
               className={`h-5 w-5 transition-colors ${
-                isFavorite ? 'text-red-500' : 'text-gray-400'
+                isFavorite ? 'text-red-500' : 'text-slate-400'
               }`}
             >
               <path
@@ -63,7 +59,7 @@ export function ProductCard({ product }: ProductCardProps) {
         </div>
 
         {/* Imagen del Producto */}
-        <div className="relative mb-4 aspect-square w-full overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
+        <div className="relative mb-4 aspect-square w-full overflow-hidden rounded-lg bg-slate-800">
           <Image
             src={product.imageUrl}
             alt={`Fotografía de ${product.name}`}
@@ -74,27 +70,27 @@ export function ProductCard({ product }: ProductCardProps) {
         </div>
 
         {/* Título */}
-        <h3 className="line-clamp-2 text-sm font-semibold text-gray-900 group-hover:text-blue-600 dark:text-gray-100 dark:group-hover:text-blue-400">
+        <h3 className="line-clamp-2 text-sm font-semibold text-slate-100 group-hover:text-blue-400 transition-colors">
           <Link href={`/product/${product.id}`} className="after:absolute after:inset-0">
             {product.name}
           </Link>
         </h3>
 
         {/* Especificaciones clave */}
-        <ul className="mt-3 space-y-1 text-xs text-gray-500 dark:text-gray-400">
+        <ul className="mt-3 space-y-1 text-xs text-slate-400">
           {product.specs.slice(0, 2).map((spec, index) => (
             <li key={index} className="flex justify-between">
-              <span className="font-medium">{spec.name}:</span>
-              <span>{spec.value}</span>
+              <span className="font-medium text-slate-400">{spec.name}:</span>
+              <span className="text-slate-300">{spec.value}</span>
             </li>
           ))}
         </ul>
       </div>
 
-      {/* Precio y CTA */}
-      <div className="mt-4 border-t border-gray-100 pt-3 dark:border-gray-800">
-        <span className="text-xs text-gray-500">Desde</span>
-        <div className="text-lg font-bold text-gray-900 dark:text-white">
+      {/* Precio */}
+      <div className="mt-4 border-t border-slate-800 pt-3">
+        <span className="text-xs text-slate-400">Desde</span>
+        <div className="text-lg font-bold text-slate-100">
           {formattedPrice}
         </div>
       </div>

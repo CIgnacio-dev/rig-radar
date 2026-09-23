@@ -8,10 +8,12 @@ export function SearchBar() {
   const { searchQuery, setSearchQuery } = useFilterStore();
   const [localQuery, setLocalQuery] = useState(searchQuery);
 
-  // Sincronizar el input local si el estado global cambia (por ejemplo al limpiar filtros)
-  useEffect(() => {
+  // Sincronización limpia si el store se resetea externamente
+  const [prevSearchQuery, setPrevSearchQuery] = useState(searchQuery);
+  if (searchQuery !== prevSearchQuery) {
+    setPrevSearchQuery(searchQuery);
     setLocalQuery(searchQuery);
-  }, [searchQuery]);
+  }
 
   // Debounce de 300ms antes de actualizar Zustand
   useEffect(() => {
